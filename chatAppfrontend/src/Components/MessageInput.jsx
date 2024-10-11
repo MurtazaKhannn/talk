@@ -2,7 +2,7 @@ import { Flex, Input, InputGroup, InputRightElement, useToast } from '@chakra-ui
 import React, { useState } from 'react'
 import { MdArrowBackIosNew, MdIosShare } from 'react-icons/md'
 import { conversationsAtom, selectedConversationAtom } from '../atoms/messagesAtom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const MessageInput = ({ setMessages }) => {
 

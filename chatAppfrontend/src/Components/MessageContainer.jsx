@@ -27,16 +27,17 @@ const MessageContainer = () => {
   const [messages, setMessages] = useState([]);
   const currentUser = useRecoilValue(userAtom);
   const { socket } = useSocket();
-  const setConversation = useRecoilState(conversationsAtom);
+  const setConversations = useRecoilState(conversationsAtom);
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    socket.on("newMesage", (message) => {
+    socket.on("newMessage", (message) => {
       if (selectedConversation._id === message.conversationId) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
-      setConversation((prev) => {
-        const updatedConversation = prev.map((conversation) => {
+
+      setConversations((prev) => {
+        const updatedConversations = prev.map((conversation) => {
           if (conversation._id === message.conversationId) {
             return {
               ...conversation,
@@ -48,12 +49,12 @@ const MessageContainer = () => {
           }
           return conversation;
         });
-        return updatedConversation;
+        return updatedConversations;
       });
     });
 
     return () => socket.off("newMessage");
-  }, [socket, selectedConversation, setConversation]);
+  }, [socket, selectedConversation, setConversations]);
 
   useEffect(() => {
     const lastMessageIsFromOtherUser =
