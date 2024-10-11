@@ -19,7 +19,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../../context/SocketContext";
-import notificationSound from "../assets/notification-sound.mp3"
+import notificationSound from "../assets/notification-sound.mp3";
 
 const MessageContainer = () => {
   const toast = useToast();
@@ -36,6 +36,9 @@ const MessageContainer = () => {
       if(selectedConversation._id === message.conversationId) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
+
+      console.log(notificationSound);
+      
 
       if(!document.hasFocus()){
         const sound = new Audio(notificationSound);
