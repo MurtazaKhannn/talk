@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import io from "socket.io-client"
+import { io } from "socket.io-client"
 import userAtom from "../src/atoms/userAtom";
 const SocketContext = createContext();
 
