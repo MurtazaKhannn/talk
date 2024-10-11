@@ -40,10 +40,10 @@ const MessageContainer = () => {
       console.log(notificationSound);
       
 
-      if(!document.hasFocus()){
+      // if(!document.hasFocus()){
         const sound = new Audio(notificationSound);
         sound.play();
-      }
+      // }
 
       setConversations((prev) => {
         const updatedConversations = prev.map((conversation) => {
