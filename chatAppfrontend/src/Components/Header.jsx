@@ -51,7 +51,9 @@ const Header = () => {
           </>
         )}
 
-        <form onSubmit={handleSubmit}>
+
+        {user && (
+          <form onSubmit={handleSubmit}>
           <Input
             value={searchedUser}
             onChange={(e) => setSearchedUser(e.target.value)}
@@ -62,6 +64,9 @@ const Header = () => {
             w={"28vw"}
           />
         </form>
+        )}
+
+        
 
         {user && (
           <Link as={RouterLink} to={`/${user.username}`}>
