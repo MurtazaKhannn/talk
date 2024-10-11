@@ -19,6 +19,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../../context/SocketContext";
+import notificationSound from "../assets/notification-sound.mp3"
 
 const MessageContainer = () => {
   const toast = useToast();
@@ -32,13 +33,18 @@ const MessageContainer = () => {
 
   useEffect(() => {
     socket.on("newMessage", (message) => {
-      if (selectedConversation._id === message.conversationId) {
+      if(selectedConversation._id === message.conversationId) {
         setMessages((prevMessages) => [...prevMessages, message]);
+      }
+
+      if(!document.hasFocus()){
+        const sound = new Audio(notificationSound);
+        sound.play();
       }
 
       setConversations((prev) => {
         const updatedConversations = prev.map((conversation) => {
-          if (conversation._id === message.conversationId) {
+          if(conversation._id === message.conversationId) {
             return {
               ...conversation,
               lastMessage: {
