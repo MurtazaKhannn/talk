@@ -41,6 +41,7 @@ app.use("/api/messages" , messageRoutes);
   app.get("*" , (req, res) => {
     res.sendFile(path.resolve(_dirname, "chatAppfrontend", "dist", "index.html"));
   });
+  
  }
 
 server.listen(PORT , () => {
