@@ -11,8 +11,11 @@ const HomePage = () => {
       setLoading(true);
       try {
         const res = await fetch('/api/posts/feed', {
-          credentials: 'include'  // Include credentials for authentication
-        })
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await res.json()
         if(data.error){
           toast({
