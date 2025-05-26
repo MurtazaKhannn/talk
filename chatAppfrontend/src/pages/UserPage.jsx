@@ -29,22 +29,38 @@ const UserPage = () => {
     const getPost = async () => {
       setfetchingPost(true);
       try {
-        const res = await fetch(`/api/posts/user/${username}` , {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        })
+        const res = await fetch(`/api/posts/user/${username}`, {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch posts');
+        }
+
         const data = await res.json();
-        console.log(data);
-        setPosts(data);
         
+        if (data.error) {
+          toast({
+            title: "Error",
+            description: data.error,
+            status: "error",
+            duration: 3000,
+          });
+          setPosts([]);
+          return;
+        }
+
+        setPosts(Array.isArray(data) ? data : []);
       } catch (error) {
         toast({
           title: "Error",
-          description: error.message,
+          description: error.message || "Failed to fetch posts",
           status: "error",
           duration: 3000,
-          isClosable: true,
-        })
+        });
         setPosts([]);
       } finally {
         setfetchingPost(false);

@@ -115,6 +115,16 @@ const ChatPage = () => {
 
   const handleConversationSearch = async (e) => {
     e.preventDefault();
+    if (!searchText.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a username to search",
+        status: "error",
+        duration: 3000,
+      });
+      return;
+    }
+    
     setSearchingUser(true);
     try {
       const res = await fetch(`/api/users/profile/${searchText}`, {
@@ -123,11 +133,16 @@ const ChatPage = () => {
           'Content-Type': 'application/json'
         }
       });
+      
+      if (!res.ok) {
+        throw new Error('User not found');
+      }
+      
       const searchedUser = await res.json();
       if (searchedUser.error) {
         toast({
           title: "Error",
-          description: "User not found",
+          description: searchedUser.error,
           status: "error",
           duration: 3000,
         });
@@ -135,7 +150,7 @@ const ChatPage = () => {
         return;
       }
 
-      if(searchedUser._id == currentUser._id){
+      if(searchedUser._id === currentUser._id){
         toast({
           title: "Error",
           description: "You can't start a conversation with yourself",
@@ -146,14 +161,18 @@ const ChatPage = () => {
         return;
       }
 
-      if(conversations.find(conversation => conversation.participants[0]._id === searchedUser._id)){
+      const existingConversation = conversations.find(
+        conversation => conversation.participants[0]._id === searchedUser._id
+      );
+
+      if(existingConversation){
         setSelectedConversation({
-          _id : conversations.find(conversation => conversation.participants[0]._id === searchedUser._id)._id,
+          _id: existingConversation._id,
           userId: searchedUser._id,
           username: searchedUser.username,
           userProfilePic: searchedUser.profilePic
-        })
-        return ;
+        });
+        return;
       }
 
       const mockConversation = {
@@ -170,21 +189,26 @@ const ChatPage = () => {
             profilePic: searchedUser.profilePic,
           }
         ]
-      }
+      };
 
-      setConversations((prevConvs) => [...prevConvs , mockConversation])
-
-
+      setConversations((prevConvs) => [...prevConvs, mockConversation]);
+      setSelectedConversation({
+        _id: mockConversation._id,
+        userId: searchedUser._id,
+        username: searchedUser.username,
+        userProfilePic: searchedUser.profilePic
+      });
 
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to search for user",
+        description: error.message || "Failed to search for user",
         status: "error",
         duration: 3000,
-      })
+      });
     } finally {
       setSearchingUser(false);
+      setSearchText('');
     }
   }
 
