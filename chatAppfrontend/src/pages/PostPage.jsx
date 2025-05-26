@@ -44,8 +44,12 @@ const PostPage = () => {
           });
           return;
         }
-        setPosts([data]); // Set the post
         console.log("Post fetched successfully:", data); // Log the fetched post
+        // Ensure comments is an array before setting the state
+        if (data && !Array.isArray(data.comments)) {
+          data.comments = [];
+        }
+        setPosts([data]); // Set the post
       } catch (error)    {
         toast({
           title: "Error",
