@@ -10,7 +10,9 @@ const HomePage = () => {
     const getfeedposts = async () => {
       setLoading(true);
       try {
-        const res = await fetch('/api/posts/feed')
+        const res = await fetch('/api/posts/feed', {
+          credentials: 'include'  // Include credentials for authentication
+        })
         const data = await res.json()
         if(data.error){
           toast({
@@ -20,10 +22,11 @@ const HomePage = () => {
             duration: 3000,
             isClosable: true,
           })
-          return;  // if error, stop fetching and return. No need to update posts.
+          setPosts([]); // Set empty array on error
+          return;
         }
         console.log(data);
-        setPosts(data);
+        setPosts(Array.isArray(data) ? data : []); // Ensure data is an array
       } catch (error) {
         toast({
           title: "Error",
@@ -32,6 +35,7 @@ const HomePage = () => {
           duration: 3000,
           isClosable: true,
         })
+        setPosts([]); // Set empty array on error
       } finally {
         setLoading(false);
       }
